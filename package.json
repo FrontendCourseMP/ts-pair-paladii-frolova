@@ -23,25 +23,4 @@
   }
 }
 
-{
-  "name": "your-project-name",
-  "type": "module",
-  "version": "1.0.0",
-  "main": "dist/index.js",
-  "type": "module",
-  "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
-    }
-  },
-  "scripts": {
-    "build": "tsc",
-    "dev": "tsc --watch",
-    "start": "node dist/index.js",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
-  },
-  "devDependencies": {
-    "typescript": "^5.3.3"
-  }
-}
+
