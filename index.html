@@ -4,43 +4,123 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Парсер ФИО</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        .required::after {
+            content: " *";
+            color: red;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input[type="text"]:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        output {
+            display: block;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            min-height: 20px;
+            font-weight: bold;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: #545b62;
+        }
+        .success {
+            color: #28a745;
+            border-color: #28a745;
+            background-color: #d4edda;
+        }
+        .error {
+            color: #dc3545;
+            border-color: #dc3545;
+            background-color: #f8d7da;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <h1>Парсер ФИО</h1>
+        
         <form id="nameForm">
             <div class="form-group">
                 <label for="lastName" class="required">Фамилия:</label>
-                <input 
-                    type="text" 
-                    id="lastName" 
-                    placeholder="Введите фамилию"
-                    required
-                >
+                <input type="text" id="lastName" placeholder="Введите фамилию" required>
             </div>
+            
             <div class="form-group">
                 <label for="firstName" class="required">Имя:</label>
-                <input 
-                    type="text" 
-                    id="firstName" 
-                    placeholder="Введите имя"
-                    required
-                >
+                <input type="text" id="firstName" placeholder="Введите имя" required>
             </div>
+            
             <div class="form-group">
                 <label for="middleName">Отчество:</label>
-                <input 
-                    type="text" 
-                    id="middleName" 
-                    placeholder="Введите отчество (необязательно)"
-                >
+                <input type="text" id="middleName" placeholder="Введите отчество (необязательно)">
             </div>
             
             <div class="form-group">
                 <label for="fullNameOutput">Результат:</label>
-                <output id="fullNameOutput">
-                    Введите данные для получения результата
-                </output>
+                <output id="fullNameOutput">Введите данные для получения результата</output>
             </div>
             
             <div class="button-group">
@@ -54,5 +134,48 @@
         </form>
     </div>
 
+    <script>
+        // Функции для работы с формой
+        function processForm() {
+            const lastName = document.getElementById('lastName').value.trim();
+            const firstName = document.getElementById('firstName').value.trim();
+            const middleName = document.getElementById('middleName').value.trim();
+            
+            // Используем функцию из TypeScript
+            if (window.processNameForm) {
+                const result = window.processNameForm(lastName, firstName, middleName);
+                updateOutput(result);
+            } else {
+                updateOutput('Ошибка: функции не загружены');
+            }
+        }
+        
+        function clearForm() {
+            document.getElementById('nameForm').reset();
+            updateOutput('Введите данные для получения результата');
+        }
+        
+        function updateOutput(message) {
+            const output = document.getElementById('fullNameOutput');
+            output.textContent = message;
+            
+            // Стилизация вывода
+            output.classList.remove('success', 'error');
+            if (message.startsWith('Ошибка:')) {
+                output.classList.add('error');
+            } else if (message !== 'Введите данные для получения результата') {
+                output.classList.add('success');
+            }
+        }
+        
+        // Обработка отправки формы (предотвращаем стандартную отправку)
+        document.getElementById('nameForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            processForm();
+        });
+    </script>
+    
+    <!-- Подключаем скомпилированный JavaScript -->
+    <script src="./dist/index.js"></script>
 </body>
 </html>
