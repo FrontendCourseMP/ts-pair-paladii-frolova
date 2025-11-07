@@ -1,10 +1,10 @@
-/**
- * @param lastName - Фамилия
- * @param firstName - Имя  
- * @param middleName - Отчество (опционально)
- * @returns 
- */
-function processNameForm(lastName: string, firstName: string, middleName: string = ''): string {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.processNameForm = processNameForm;
+exports.parseName = parseName;
+exports.validateNames = validateNames;
+exports.formatInitials = formatInitials;
+function processNameForm(lastName, firstName, middleName = '') {
     if (!lastName.trim() || !firstName.trim()) {
         return 'Ошибка: Фамилия и имя обязательны для заполнения';
     }
@@ -17,38 +17,25 @@ function processNameForm(lastName: string, firstName: string, middleName: string
     }
     return formatInitials(parsedLastName, parsedFirstName, parsedMiddleName);
 }
-
-/**
- * @param name - Имя для парсинга
- * @returns Очищенное имя
- */
-function parseName(name: string): string {
+function parseName(name) {
     return name
         .trim()
         .replace(/\s+/g, ' ')
         .split(' ')
         .map(word => {
-            if (!word) return '';
-            return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-        })
+        if (!word)
+            return '';
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    })
         .join(' ');
 }
-
-/**
- * @param lastName - Фамилия
- * @param firstName - Имя
- * @param middleName - Отчество
- * @returns 
- */
-function validateNames(lastName: string, firstName: string, middleName: string): true | string {
+function validateNames(lastName, firstName, middleName) {
     if (lastName.length < 2) {
         return 'Ошибка: Фамилия должна содержать минимум 2 символа';
     }
-    
     if (firstName.length < 2) {
         return 'Ошибка: Имя должно содержать минимум 2 символа';
     }
-
     if (middleName && middleName.length < 2) {
         return 'Ошибка: Отчество должно содержать минимум 2 символа';
     }
@@ -79,20 +66,11 @@ function validateNames(lastName: string, firstName: string, middleName: string):
     }
     return true;
 }
-
-/**
-
- * @param lastName - Фамилия
- * @param firstName - Имя
- * @param middleName - Отчество
- * @returns Строка в формате "Фамилия И.О."
- */
-function formatInitials(lastName: string, firstName: string, middleName: string): string {
+function formatInitials(lastName, firstName, middleName) {
     const firstInitial = firstName.charAt(0) + '.';
     const middleInitial = middleName ? middleName.charAt(0) + '.' : '';
     return `${lastName} ${firstInitial}${middleInitial}`.trim();
 }
 if (typeof window !== 'undefined') {
-    (window as any).processNameForm = processNameForm;
+    window.processNameForm = processNameForm;
 }
-export { processNameForm, parseName, validateNames, formatInitials };
