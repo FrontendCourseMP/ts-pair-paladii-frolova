@@ -134,6 +134,15 @@
         </form>
     </div>
 
+    <section>
+        <form action="">
+            <label for="expression">Введиете выражение</label>
+            <input id = "expression" type="text" required>
+            <button type="submit">Вычислить</button>
+        </form>
+        <div id="result" class="result"></div>
+    </section>
+
     <script>
         function processForm() {
             const lastName = document.getElementById('lastName').value.trim();

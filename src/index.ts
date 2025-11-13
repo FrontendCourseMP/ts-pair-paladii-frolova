@@ -96,3 +96,12 @@ if (typeof window !== 'undefined') {
     (window as any).processNameForm = processNameForm;
 }
 export { processNameForm, parseName, validateNames, formatInitials };
+
+
+export class MathCalc {
+    public cleanExpression(expression: string): string {
+        if (!expression) {
+            return "";
+        }
+    }
+}
