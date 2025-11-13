@@ -98,22 +98,3 @@ if (typeof window !== 'undefined') {
 export { processNameForm, parseName, validateNames, formatInitials };
 
 
-export class MathCalc {
-   private allowedChars: Set<string> = new Set('0123456789.+* '.split(''));
-   public cleanExpression(expression: string): string {
-        if (!expression) {
-            return "";
-        }
-        const cleaned = expression
-            .split('')
-            .filter(char => this.allowedChars.has(char))
-            .join('');
-        
-        return cleaned.replace(/\s+/g, '');
-    }
-   private parseExpression(expression:string): {numbers: number[], operators: string[]} {
-      
-   }
-
-}
-
