@@ -135,13 +135,11 @@
     </div>
 
     <script>
-        // Функции для работы с формой
         function processForm() {
             const lastName = document.getElementById('lastName').value.trim();
             const firstName = document.getElementById('firstName').value.trim();
             const middleName = document.getElementById('middleName').value.trim();
             
-            // Используем функцию из TypeScript
             if (window.processNameForm) {
                 const result = window.processNameForm(lastName, firstName, middleName);
                 updateOutput(result);
@@ -158,8 +156,6 @@
         function updateOutput(message) {
             const output = document.getElementById('fullNameOutput');
             output.textContent = message;
-            
-            // Стилизация вывода
             output.classList.remove('success', 'error');
             if (message.startsWith('Ошибка:')) {
                 output.classList.add('error');
@@ -167,15 +163,13 @@
                 output.classList.add('success');
             }
         }
-        
-        // Обработка отправки формы (предотвращаем стандартную отправку)
+
         document.getElementById('nameForm').addEventListener('submit', function(e) {
             e.preventDefault();
             processForm();
         });
     </script>
-    
-    <!-- Подключаем скомпилированный JavaScript -->
     <script src="./dist/index.js"></script>
+    <!-- jfhdjfjfjkvhkjdfh -->
 </body>
 </html>
