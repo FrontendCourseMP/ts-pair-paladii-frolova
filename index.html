@@ -135,12 +135,14 @@
     </div>
 
     <section>
-        <form action="">
-            <label for="expression">Введиете выражение</label>
-            <input id = "expression" type="text" required>
-            <button type="submit">Вычислить</button>
+        <h1>Математический калькулятор</h1>
+        <form id="calcForm">
+            <div class="form-group">
+                <label for="expression">Введите математическое выражение:</label>
+                <input type="text" id="expression" required>
+            </div>
+            <button type="submit" id="calculateBtn">Вычислить</button>
         </form>
-        <div id="result" class="result"></div>
     </section>
 
     <script>
@@ -181,3 +183,7 @@
     <script src="./dist/index.js"></script>
 </body>
 </html>
+
+
+TODO 
+Паладий нужно дописать в index.ts основное приложение 
