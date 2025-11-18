@@ -1,10 +1,82 @@
-// app.ts
 import { 
-    calculateExpressionSafe, 
+    CalculationResult, 
+    ValidationResult, 
+    cleanExpression, 
     validateExpression, 
-    cleanExpression,
-    CalculationResult 
+    calculateExpressionSafe 
 } from './mathCalculator';
+
+function processNameForm(lastName: string, firstName: string, middleName: string = ''): string {
+    if (!lastName.trim() || !firstName.trim()) {
+        return 'Ошибка: Фамилия и имя обязательны для заполнения';
+    }
+    const parsedLastName = parseName(lastName);
+    const parsedFirstName = parseName(firstName);
+    const parsedMiddleName = middleName ? parseName(middleName) : '';
+    const validationResult = validateNames(parsedLastName, parsedFirstName, parsedMiddleName);
+    if (validationResult !== true) {
+        return validationResult;
+    }
+    return formatInitials(parsedLastName, parsedFirstName, parsedMiddleName);
+}
+
+function parseName(name: string): string {
+    return name
+        .trim()
+        .replace(/\s+/g, ' ')
+        .split(' ')
+        .map(word => {
+            if (!word) return '';
+            return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+        })
+        .join(' ');
+}
+
+function validateNames(lastName: string, firstName: string, middleName: string): true | string {
+    if (lastName.length < 2) {
+        return 'Ошибка: Фамилия должна содержать минимум 2 символа';
+    }
+    
+    if (firstName.length < 2) {
+        return 'Ошибка: Имя должно содержать минимум 2 символа';
+    }
+
+    if (middleName && middleName.length < 2) {
+        return 'Ошибка: Отчество должно содержать минимум 2 символа';
+    }
+    const nameRegex = /^[A-Za-zА-Яа-яЁё\s-]+$/;
+    if (!nameRegex.test(lastName)) {
+        return 'Ошибка: Фамилия содержит недопустимые символы';
+    }
+    if (!nameRegex.test(firstName)) {
+        return 'Ошибка: Имя содержит недопустимые символы';
+    }
+    if (middleName && !nameRegex.test(middleName)) {
+        return 'Ошибка: Отчество содержит недопустимые символы';
+    }
+    const lettersOnlyRegex = /^[A-Za-zА-Яа-яЁё]+$/;
+    const lastNameLetters = lastName.replace(/[-\s]/g, '');
+    if (!lettersOnlyRegex.test(lastNameLetters)) {
+        return 'Ошибка: Фамилия должна содержать только буквы';
+    }
+    const firstNameLetters = firstName.replace(/[-\s]/g, '');
+    if (!lettersOnlyRegex.test(firstNameLetters)) {
+        return 'Ошибка: Имя должно содержать только буквы';
+    }
+    if (middleName) {
+        const middleNameLetters = middleName.replace(/[-\s]/g, '');
+        if (!lettersOnlyRegex.test(middleNameLetters)) {
+            return 'Ошибка: Отчество должно содержать только буквы';
+        }
+    }
+    return true;
+}
+
+function formatInitials(lastName: string, firstName: string, middleName: string): string {
+    const firstInitial = firstName.charAt(0) + '.';
+    const middleInitial = middleName ? middleName.charAt(0) + '.' : '';
+    return `${lastName} ${firstInitial}${middleInitial}`.trim();
+}
 
 class CalculatorApp {
     private form: HTMLFormElement;
@@ -15,6 +87,7 @@ class CalculatorApp {
     constructor() {
         this.initializeElements();
         this.setupEventListeners();
+        console.log("Калькулятор инициализирован!");
     }
 
     private initializeElements(): void {
@@ -22,36 +95,28 @@ class CalculatorApp {
         this.expressionInput = document.getElementById('expression') as HTMLInputElement;
         this.resultDiv = document.getElementById('result') as HTMLDivElement;
         this.calculateBtn = document.getElementById('calculateBtn') as HTMLButtonElement;
+        
+        console.log("Элементы найдены:", {
+            form: !!this.form,
+            input: !!this.expressionInput,
+            result: !!this.resultDiv,
+            button: !!this.calculateBtn
+        });
     }
 
     private setupEventListeners(): void {
         this.form.addEventListener('submit', (e) => this.handleSubmit(e));
         
-        // Очистка поля ввода при фокусе
         this.expressionInput.addEventListener('focus', () => {
             this.cleanInput();
         });
 
-        // Валидация в реальном времени
         this.expressionInput.addEventListener('input', () => {
             this.validateInput();
-        });
-
-        // Примеры выражений
-        document.querySelectorAll('.example-btn').forEach(button => {
-            button.addEventListener('click', (e) => {
-                e.preventDefault();
-                const expr = (e.target as HTMLButtonElement).dataset.expr;
-                if (expr) {
-                    this.expressionInput.value = expr;
-                    this.validateInput();
-                }
-            });
         });
     }
 
     private cleanInput(): void {
-        // Используем функцию очистки из mathCalculator
         this.expressionInput.value = cleanExpression(this.expressionInput.value);
     }
 
@@ -70,6 +135,7 @@ class CalculatorApp {
         event.preventDefault();
         
         const expression = this.expressionInput.value.trim();
+        console.log("Вычисляем:", expression);
         
         if (!expression) {
             this.showError("Пожалуйста, введите выражение");
@@ -79,13 +145,13 @@ class CalculatorApp {
         this.calculateBtn.disabled = true;
         this.calculateBtn.textContent = 'Вычисление...';
 
-        // Используем функцию вычисления из mathCalculator
         setTimeout(() => {
-            const result: CalculationResult = calculateExpressionSafe(expression);
+            const result = calculateExpressionSafe(expression);
+            console.log("Результат:", result);
             this.displayResult(result);
             this.calculateBtn.disabled = false;
             this.calculateBtn.textContent = 'Вычислить';
-        }, 500);
+        }, 100);
     }
 
     private displayResult(result: CalculationResult): void {
@@ -97,6 +163,7 @@ class CalculatorApp {
             this.resultDiv.className = 'result error';
         }
         this.resultDiv.style.display = 'block';
+        console.log("Результат отображен!");
     }
 
     private showError(message: string): void {
@@ -105,8 +172,8 @@ class CalculatorApp {
         this.resultDiv.style.display = 'block';
     }
 }
-
-// Инициализация приложения после загрузки DOM
+(window as any).processNameForm = processNameForm;
 document.addEventListener('DOMContentLoaded', () => {
+    console.log("DOM загружен!");
     new CalculatorApp();
 });

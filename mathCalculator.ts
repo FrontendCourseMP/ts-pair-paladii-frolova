@@ -47,7 +47,7 @@ export function validateExpression(expression: string): ValidationResult {
     const numbers = expression.split(/[\+\*]/);
     for (const num of numbers) {
         if (!num) {
-            return { isValid: false, message: "Обнаружено пустое число между операторами" };
+            return { isValid: false, message: "Обнаружено пустое число между операторов" };
         }
         if ((num.match(/\./g) || []).length > 1) {
             return { isValid: false, message: `Некорректное число: ${num} (слишком много точек)` };
@@ -60,7 +60,8 @@ export function validateExpression(expression: string): ValidationResult {
 
     return { isValid: true, message: "Выражение корректно" };
 }
-function parseExpression(expression: string): { numbers: number[], operators: string[] } {
+
+export function parseExpression(expression: string): { numbers: number[], operators: string[] } {
     const numbers: number[] = [];
     const operators: string[] = [];
     
